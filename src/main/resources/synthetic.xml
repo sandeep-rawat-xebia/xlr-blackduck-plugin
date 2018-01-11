@@ -1,0 +1,23 @@
+<synthetic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="http://www.xebialabs.com/deployit/synthetic"
+           xsi:schemaLocation="http://www.xebialabs.com/deployit/synthetic synthetic.xsd">
+
+    <type type="blackduck.Server" extends="configuration.HttpConnection">
+        <property name="checkConfigurationPath" hidden="true" default="/api"/>
+        <property name="scriptLocation" hidden="true" default="configuration/HttpConnectionCheck.py"/>
+    </type>
+
+    <type type="blackduck.BlackduckSummaryTile" label="Blackduck Summary" extends="xlrelease.Tile">
+        <property name="uri" hidden="true" default="include/BlackduckSummaryTile/blackduck-query-summary-view.html"/>
+        <property name="title" description="Tile title" default="SONAR Summary"/>
+        <property name="embedded" kind="boolean" hidden="true" default="true" required="false"/>  <!-- XLR 7.0.0 compatibility -->
+        <property category="input" name="blackduckServer" referenced-type="blackduck.Server" kind="ci" label="Server"
+                  description="SONAR server id to connect to"/>
+        <property category="input" name="resource" required="true"
+                  description="Namespace of project to pull metrics for eg. org.apache.cordova"/>
+        <property category="input" name="metrics" required="true"
+                  description="Metrics to pull. For example: line_coverage, complexity, violations, ncloc"
+                  kind="map_string_string"/>
+    </type>
+
+</synthetic>

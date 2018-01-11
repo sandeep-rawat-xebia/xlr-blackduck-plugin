@@ -1,0 +1,33 @@
+<div data-ng-controller="blackduck.blackduckQueryTileViewController as blackduckQueryTile" class="blackduck-query-tile dashboard-tile">
+
+    <div class="no-results" ng-if="!blackduckQueryTile.tileConfigurationIsPopulated()">
+        Please configure this tile
+    </div>
+
+    <div class="no-results" ng-if="blackduckQueryTile.statusesCounter === 0">
+        The specified query did not return any issues
+    </div>
+
+    <div ng-if="!blackduckQueryTile.loading ">
+        <div id="summary">
+
+            <table class="table r.blackduck-query-tile">
+                <tr ng-repeat="value in blackduckQueryTile.result">
+                    <td>{{value.key}}</td>
+                    <td ng-if=" value.key != 'Arfifact Version' ">
+                        <a href="{{value.url}}" target="_blank" > {{value.value}} </a>
+                    </td>
+                    <td ng-if=" value.key == 'Arfifact Version' ">
+                        {{value.value}}
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+
+    <div ng-if="blackduckQueryTile.loading" class="spinner" style="text-align: center">
+        <img src="static/@project.version@/styles/img/big-ajax-loader.gif" alt="Loading..."/>
+    </div>
+
+</div>

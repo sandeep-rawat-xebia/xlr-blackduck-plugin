@@ -1,0 +1,69 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        ["public", "thirdparty", "releases"].each { r ->
+            maven {
+                credentials {
+                    username nexusUserName
+                    password nexusPassword
+                }
+                url "${nexusBaseUrl}/repositories/${r}"
+            }
+        }
+    }
+
+    dependencies {
+        classpath "com.xebialabs.gradle.plugins:gradle-xl-plugins-plugin:${xlPluginsPluginVersion}"
+        classpath "com.xebialabs.gradle.plugins.xlrelease:gradle-xl-release-plugin-plugin:${xlReleasePluginPluginVersion}"
+        classpath "com.moowork.gradle:gradle-node-plugin:1.1.1"
+        classpath "gradle.plugin.com.hierynomus.gradle.plugins:jython-gradle-plugin:${jythonGradlePluginVersion}"
+    }
+}
+
+plugins {
+    id "com.github.hierynomus.jython" version "0.7.0"
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'groovy'
+apply plugin: 'com.moowork.node'
+apply plugin: 'com.xebialabs.xl-release.plugin'
+apply plugin: 'xebialabs.root.opinions'
+apply plugin: 'xebialabs.opinions'
+apply plugin: "com.github.hierynomus.jython"
+apply plugin: 'com.xebialabs.dependency'
+
+node {
+    version = '7.2.1'
+    yarnVersion = '0.22.0'
+    npmVersion= '3.10.9'
+    download = true
+    nodeModulesDir = file("${rootProject.projectDir}")
+}
+
+group 'com.xebialabs.xlrelease.plugins'
+
+configurations {
+    jython
+}
+configurations.jython.extendsFrom(configurations.compile)
+
+dependencies {
+    compile fileTree(dir: "${xlReleasePlugin.xlReleaseHome}/lib", includes: ['*.jar'])
+    jython ":requests:2.11.1"
+}
+
+sourceSets.main.groovy.srcDirs += ["src/main/java"]
+sourceSets.main.groovy.srcDirs = ["src/main/jython", "src/main/resources"]
+sourceSets.test.resources.srcDirs = ["src/test/jython", "src/test/resources"]
+
+
+sourceSets {
+    test {
+        resources {
+            srcDir "src/test/jython"
+            exclude '**/*.js'
+        }
+    }
+}
